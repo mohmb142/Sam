@@ -1,6 +1,8 @@
 package com.mohmb142.sam
 
 import android.Manifest
+import android.app.role.RoleManager
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -22,14 +24,27 @@ import com.mohmb142.sam.voice.VoiceEngine
 
 class MainActivity : ComponentActivity() {
     private val vm: SamChatViewModel by viewModels()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContent { SamApp(vm) }
+        setContent { SamApp(vm, onEnableCallScreening = ::requestCallScreeningRole) }
     }
+
+    private fun requestCallScreeningRole() {
+        val roleManager = getSystemService(RoleManager::class.java)
+        if (roleManager != null && roleManager.isRoleAvailable(RoleManager.ROLE_CALL_SCREENING)) {
+            startActivityForResult(
+                roleManager.createRequestRoleIntent(RoleManager.ROLE_CALL_SCREENING),
+                REQUEST_CALL_SCREENING
+            )
+        }
+    }
+
+    companion object { private const val REQUEST_CALL_SCREENING = 401 }
 }
 
 @Composable
-private fun SamApp(vm: SamChatViewModel) {
+private fun SamApp(vm: SamChatViewModel, onEnableCallScreening: () -> Unit) {
     val context = androidx.compose.ui.platform.LocalContext.current
     val voice = remember { VoiceEngine(context) }
     val messages by vm.messages.collectAsState()
@@ -85,6 +100,10 @@ private fun SamApp(vm: SamChatViewModel) {
                     }, Modifier.fillMaxWidth()) {
                         Text(if (listening) "جاري الاستماع…" else "تحدث مع سام")
                     }
+                    Spacer(Modifier.height(8.dp))
+                    OutlinedButton(onClick = onEnableCallScreening, Modifier.fillMaxWidth()) {
+                        Text("تفعيل التعرف على المكالمات")
+                    }
                 }
             }
         }
@@ -100,7 +119,7 @@ private fun SamApp(vm: SamChatViewModel) {
                     OutlinedTextField(apiKey, { apiKey = it }, modifier = Modifier.fillMaxWidth(), label = { Text("OpenRouter API Key") }, singleLine = true)
                     OutlinedTextField(model, { model = it }, modifier = Modifier.fillMaxWidth(), label = { Text("Model ID") }, singleLine = true)
                     Text("Base URL: ${OpenRouterDefaults.BASE_URL}")
-                    Text("مثال: openai/gpt-5.4 أو أي model ID متاح في OpenRouter.")
+                    Text("مثال مجاني متاح حالياً: openai/gpt-oss-120b:free")
                 }
             },
             confirmButton = {
