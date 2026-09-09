@@ -31,4 +31,8 @@ Never commit an OpenRouter API key to Git. Keys are stored locally using encrypt
 
 ## Build
 
-Open the project in Android Studio and run the `app` module. GitHub Actions also builds `app-debug.apk` on pushes to `main` and uploads it as the `sam-debug-apk` artifact.
+Open the project in Android Studio and run the `app` module. GitHub Actions builds `app-debug.apk` on pushes to `main` and uploads it as the `sam-debug-apk` artifact.
+
+## CI verification
+
+Every push to `main` is built by GitHub Actions before an APK artifact is considered testable.
