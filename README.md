@@ -1,24 +1,34 @@
 # SAM — Smart Personal Assistant
 
-SAM is an Android-first personal AI agent designed to interact with the phone through voice, memory, permissions, and structured tools.
+SAM is an Android-first, Arabic-friendly personal AI agent. The current MVP provides voice input, OpenRouter chat, secure API-key storage, structured agent actions, call-screening role support, local memory storage, and scheduled-task notifications.
 
-## Core vision
+## Current release
 
-- Voice-first Arabic-friendly assistant
-- Personal memory and user preferences
-- Call handling and call summaries where Android permits
-- App/tool integrations for messaging, browser, contacts, calendar and notifications
-- Scheduled tasks and reminders
-- Multiple AI providers with user-supplied API keys
-- Model routing and fallback models
-- Permission-aware structured actions
+**0.3.0 — installable/debug build target**
+
+### Implemented
+- Android 10+ (API 29)
+- Arabic RTL Compose UI
+- OpenRouter as the primary AI provider
+- User-supplied OpenRouter API key and model ID
+- OpenAI-compatible provider abstraction
+- Secure local secret storage
+- Voice input with Android SpeechRecognizer and TTS foundation
+- Structured AgentAction / Tool / PermissionManager architecture
+- CallScreeningService role request and incoming-call notification
+- Local preference memory store
+- AlarmManager-based scheduled task notifications
+- GitHub Actions debug APK build
+
+### Planned integrations
+WhatsApp/Telegram automation, richer call conversation, browser tools, calendar, advanced memory, and additional AI providers will be added only through Android-supported APIs and explicit permissions.
 
 ## Security
 
-SAM must never allow an LLM to execute arbitrary Android or shell commands directly. Model output is converted into structured actions and validated by the permission manager before execution.
+SAM never gives an LLM direct shell or Android execution privileges. Model output must become a structured action and pass validation/permission checks before a tool executes it.
 
-API keys are intended to be stored securely on-device using Android Keystore/encrypted storage and must never be committed to Git.
+Never commit an OpenRouter API key to Git. Keys are stored locally using encrypted Android storage.
 
-## Project status
+## Build
 
-Initial project scaffold. The implementation will be built incrementally, starting with the Android app foundation, model-provider abstraction, voice flow, memory, permissions, and task engine.
+Open the project in Android Studio and run the `app` module. GitHub Actions also builds `app-debug.apk` on pushes to `main` and uploads it as the `sam-debug-apk` artifact.
