@@ -5,25 +5,16 @@
     <uses-permission android:name="android.permission.CALL_PHONE" />
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
 
-    <application
-        android:theme="@style/Theme.SAM"
-        android:label="SAM"
-        android:allowBackup="false"
-        android:supportsRtl="true">
+    <application android:theme="@style/Theme.SAM" android:label="SAM" android:allowBackup="false" android:supportsRtl="true">
         <activity android:name=".MainActivity" android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
-        <service
-            android:name=".calls.SamCallScreeningService"
-            android:permission="android.permission.BIND_SCREENING_SERVICE"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="android.telecom.CallScreeningService" />
-            </intent-filter>
+        <receiver android:name=".scheduler.SamTaskReceiver" android:exported="false" />
+        <service android:name=".calls.SamCallScreeningService" android:permission="android.permission.BIND_SCREENING_SERVICE" android:exported="true">
+            <intent-filter><action android:name="android.telecom.CallScreeningService" /></intent-filter>
         </service>
     </application>
 </manifest>
